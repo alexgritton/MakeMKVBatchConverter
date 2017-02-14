@@ -1,0 +1,214 @@
+﻿<Window x:Class="MakeMKV_Batch_Converter.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:MakeMKV_Batch_Converter" xmlns:t="http://schemas.telerik.com/2008/xaml/presentation" mc:Ignorable="d" Title="MakeMKV Batch Converter" Height="700" Width="1200" d:DataContext="{d:DesignInstance local:MainWindowVM}" Background="{StaticResource FlatWhiteBrush}" Initialized="MainWindow_OnInitialized">
+    <Window.Resources>
+        <Style TargetType="t:RadButton">
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style TargetType="CheckBox" BasedOn="{StaticResource {t:ThemeResourceKey ElementType=CheckBox}}">
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{StaticResource FlatBlackBrush}" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="3" />
+        </Style>
+        <Style TargetType="t:RadProgressBar">
+            <Setter Property="Margin" Value="3" />
+        </Style>
+        <local:StringToInt x:Key="StringToInt" />
+    </Window.Resources>
+    <t:RadDocking Name="Docking" AllowDrop="True" PreviewDrop="MainWindow_OnDrop" DragEnter="MainWindow_OnDragEnter" >
+        <t:RadDocking.DocumentHost>
+            <t:RadSplitContainer>
+                <t:RadPaneGroup>
+                    <t:RadDocumentPane Title="Conversion Console" CanUserClose="False" t:RadDocking.SerializationTag="ConversionConsole">
+                        <t:RadDocumentPane.Content>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="35" />
+                                    <RowDefinition />
+                                    <RowDefinition Height="35" />
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="80" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="{Binding ConversionLabel}" />
+                                    <t:RadButton Grid.Column="2" Content="Start" Command="{Binding StartDvdProcess}" IsEnabled="{Binding ButtonsEnabled}" />
+                                </Grid>
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Focusable="False" local:ScrollViewerExtensions.AlwaysScrollToEnd="True">
+                                    <TextBlock Background="Black" Foreground="White" Text="{Binding ConversionBoxText}" TextWrapping="Wrap" />
+                                </ScrollViewer>
+                                <t:RadProgressBar Margin="0,3,0,3" Grid.Row="2" Value="{Binding ProgressBar}" />
+                            </Grid>
+                        </t:RadDocumentPane.Content>
+                    </t:RadDocumentPane>
+                </t:RadPaneGroup>
+            </t:RadSplitContainer>
+        </t:RadDocking.DocumentHost>
+        <t:RadSplitContainer InitialPosition="DockedLeft">
+            
+            <t:RadPaneGroup>
+                <t:RadDocumentPane Title="Conversion Queue" CanUserClose="False" t:RadDocking.SerializationTag="ConversionQueue">
+                    <t:RadDocumentPane.Content>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                                <RowDefinition Height="35" />
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="35" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <t:RadButton Grid.Row="0" Grid.Column="2" Content="Remove All" Command="{Binding RemoveAll}" />
+                                <t:RadButton Grid.Row="0" Grid.Column="1" Content="Remove Selected" Command="{Binding RemoveSelected}" CommandParameter="{Binding ElementName=dvdList, Path=SelectedItems}" />
+                                <t:RadButton Grid.Row="0" Grid.Column="0" Content="Add Files" Command="{Binding LoadAllFiles}" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="Or Drag Files" Foreground="{StaticResource FlatBlackBrush}" Margin="3, 3, 3, 6" FontSize="16" HorizontalAlignment="Center" />
+                            </Grid>
+                            <t:RadGridView Grid.Row="1" ItemsSource="{Binding DvdFolders}" SelectionMode="Single" IsReadOnly="false" AutoGenerateColumns="False" ShowGroupPanel="False">
+                                <t:RadGridView.RowStyle>
+                                    <Style TargetType="t:GridViewRow">
+                                        <Setter Property="Background" Value="{Binding Background}" />
+                                    </Style>
+                                </t:RadGridView.RowStyle>
+                                <t:RadGridView.AlternateRowStyle>
+                                    <Style TargetType="t:GridViewRow">
+                                        <Setter Property="Background" Value="{Binding AlternateBackground}" />
+                                    </Style>
+                                </t:RadGridView.AlternateRowStyle>
+                                <t:RadGridView.Columns>
+                                    <t:GridViewCheckBoxColumn DataMemberBinding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" IsFilterable="False" Header="" EditTriggers="CellClick" AutoSelectOnEdit="True" IsReadOnly="False"/>
+                                    <t:GridViewDataColumn Header="Name" DataMemberBinding="{Binding DisplayName, UpdateSourceTrigger=PropertyChanged}" IsFilterable="false" IsReadOnly="True" />
+                                    <t:GridViewDataColumn Header="Progress" DataMemberBinding="{Binding Progress}" IsFilterable="false" IsReadOnly="True" />
+                                    <t:GridViewDataColumn Header="Type" DataMemberBinding="{Binding Type}" IsFilterable="false" IsReadOnly="True" />
+                                    <t:GridViewDataColumn Header="File Location" DataMemberBinding="{Binding PathName}" IsFilterable="false" IsReadOnly="True" />
+                                </t:RadGridView.Columns>
+                            </t:RadGridView>
+                            <Label Grid.Row="2" Content="{Binding FolderInfoLabel}" />
+                        </Grid>
+                    </t:RadDocumentPane.Content>
+                </t:RadDocumentPane>
+            </t:RadPaneGroup>
+        </t:RadSplitContainer>
+       
+        <t:RadSplitContainer InitialPosition="DockedRight">
+            <t:RadPaneGroup>
+                <t:RadDocumentPane Title="Settings" CanUserClose="False" t:RadDocking.SerializationTag="Settings">
+                    <t:RadDocumentPane.Content>
+                        <t:RadTabControl>
+                            <t:RadTabItem Header="Basic">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Grid.Row="0" Header="Output Options">
+                                            <Grid Margin="3">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="35" />
+                                                    <RowDefinition Height="35" />
+                                                    <RowDefinition Height="35" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <CheckBox Content="Same As Source" IsChecked="{Binding SameAsSource}" IsEnabled="{Binding ButtonsEnabled}" />
+                                                <t:RadButton Content="Output Folder" Grid.Row="1" Width="100" Command="{Binding UpdateOutputDir}" HorizontalAlignment="Left" IsEnabled="{Binding ButtonsEnabled}" />
+                                                <TextBlock Grid.Row="2" Text="{Binding OutputDir}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{StaticResource FlatBlackBrush}" />
+                                                <GroupBox Grid.Row="3" Header="Filename Options">
+                                                    <Grid Margin="3">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="35" />
+                                                            <RowDefinition Height="35" />
+                                                        </Grid.RowDefinitions>
+                                                        <CheckBox Content="DVD_NAME_OUTPUT_EXAMPLE" IsChecked="{Binding NormalizeNameChecked}" IsEnabled="{Binding ButtonsEnabled}" Command="{Binding VerifyNameCheck}" CommandParameter="Normalize" />
+                                                        <CheckBox Grid.Row="1" Content="Keep Original Filename" IsChecked="{Binding StandardNameChecked}" IsEnabled="{Binding ButtonsEnabled}" Command="{Binding VerifyNameCheck}" CommandParameter="Standard" />
+                                                    </Grid>
+                                                </GroupBox>
+                                            </Grid>
+                                        </GroupBox>
+                                        <GroupBox Grid.Row="1" Header="Title Options">
+                                            <Grid Margin="3">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="35" />
+                                                    <RowDefinition Height="35" />
+                                                    <RowDefinition Height="35" />
+                                                    <RowDefinition Height="35" />
+                                                </Grid.RowDefinitions>
+                                                <CheckBox Content="Main Title Only" IsEnabled="{Binding ButtonsEnabled}" IsChecked="{Binding MainTitle}" Command="{Binding VerifyTitleCheck}" CommandParameter="MainTitle" />
+                                                <CheckBox Grid.Row="1" Content="All Titles" IsChecked="{Binding AllTitles}" IsEnabled="{Binding ButtonsEnabled}" Command="{Binding VerifyTitleCheck}" CommandParameter="AllTitles" />
+                                                <Label Grid.Row="2" Content="Min Title Length (s)" />
+                                                <TextBox Grid.Row="3" Width="80" VerticalContentAlignment="Center" HorizontalAlignment="Left" Text="{Binding MinSec, Converter={StaticResource StringToInt}, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding ButtonsEnabled}" />
+                                            </Grid>
+                                        </GroupBox>
+                                        <GroupBox Grid.Row="2" Header="MakeMKVcon.exe Location">
+                                            <Grid Margin="3">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="35" />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <t:RadButton Content="Locate MakeMKVcon.exe" Command="{Binding ChangeAppSource}" IsEnabled="{Binding ButtonsEnabled}" />
+                                                <TextBlock Grid.Row="1" Text="{Binding AppSource}" TextWrapping="Wrap" Foreground="{StaticResource FlatBlackBrush}" />
+                                            </Grid>
+                                        </GroupBox>
+                                    </Grid>
+                                </ScrollViewer>
+
+                            </t:RadTabItem>
+                            <t:RadTabItem Header="Advanced">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Header="Completion Options">
+                                            <Grid Margin="3">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="35" />
+                                                    <RowDefinition Height="35" />
+                                                    <RowDefinition Height="35" />
+                                                    <RowDefinition Height="35" />
+                                                    <RowDefinition Height="35" />
+                                                    <RowDefinition Height="35" />
+                                                    <RowDefinition Height="35" />
+                                                </Grid.RowDefinitions>
+                                                <CheckBox Content="ShutDown Computer When Finished" IsChecked="{Binding ShutDown}" />
+                                                <CheckBox Grid.Row="1" Content="Run Program When Finished" IsChecked="{Binding RunProgram}" />
+                                                <t:RadButton Grid.Row="2" Content="Select Program" Width="125" HorizontalAlignment="Left" Command="{Binding ChangeFinishedProgramSource}" />
+                                                <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="{Binding FinishProgram}" TextWrapping="Wrap" Foreground="{StaticResource FlatBlackBrush}" />
+                                                <t:RadButton Grid.Row="4" Content="Completed Sound" Width="125" HorizontalAlignment="Left" Command="{Binding ChangeFinishedSoundSource}" />
+                                                <TextBlock Grid.Row="5" VerticalAlignment="Center" Text="{Binding FinalSound}" TextWrapping="Wrap" Foreground="{StaticResource FlatBlackBrush}" />
+                                                <Label Grid.Row="6" Content="{Binding ApplicationVersion}" VerticalAlignment="Center" />
+                                            </Grid>
+                                        </GroupBox>
+
+                                        <!--<GroupBox Grid.Row="1" Header="Corruption Options">
+                            <Grid Margin="3">
+                                
+                            </Grid>
+                        </GroupBox>-->
+
+                                    </Grid>
+                                </ScrollViewer>
+                            </t:RadTabItem>
+                        </t:RadTabControl>
+                    </t:RadDocumentPane.Content>
+                </t:RadDocumentPane>
+            </t:RadPaneGroup>
+        </t:RadSplitContainer>
+    </t:RadDocking>
+</Window>

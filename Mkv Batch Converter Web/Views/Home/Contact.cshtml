@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Contact";
+}
+@model Mkv_Batch_Converter_Web.Models.EmailModel
+<div class="container">
+    <div class="jumbotron">
+        <h2 class="text-center">Questions, Suggestions, Comments?</h2>
+        <br/>
+        <div class="col-lg-6 col-lg-offset-3 text-center">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Contact Me</h3>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("Contact", "Home", FormMethod.Post))
+                    {
+                        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.Name, new { placeholder = "Name", @class = "form-control", style = "margin: auto" });
+                        <br />
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "form-control", style = "margin: auto" });
+                        <br />
+                        @Html.ValidationMessageFor(m => m.Comment, "", new { @class = "text-danger" })
+                        @Html.TextAreaFor(m => m.Comment, new { placeholder = "Comments...", @class = "form-control", style = "height:100px; margin: auto" });
+                        <br />
+                    <input type="submit" class="btn btn-primary btn-lg" value="Send" style="width: 200px" />
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

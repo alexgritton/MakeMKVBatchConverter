@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeMKV Batch Converter", "MakeMKV Batch Converter\MakeMKV Batch Converter.csproj", "{3F2641A3-F431-4063-B705-F3FBAD7EA0E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mkv Batch Converter Web", "Mkv Batch Converter Web\Mkv Batch Converter Web.csproj", "{1E7A9792-55B5-4272-ACDE-4175388128C6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CD_ROM|Any CPU = CD_ROM|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		DVD-5|Any CPU = DVD-5|Any CPU
+		Release|Any CPU = Release|Any CPU
+		SingleImage|Any CPU = SingleImage|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3F2641A3-F431-4063-B705-F3FBAD7EA0E2}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{3F2641A3-F431-4063-B705-F3FBAD7EA0E2}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{3F2641A3-F431-4063-B705-F3FBAD7EA0E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F2641A3-F431-4063-B705-F3FBAD7EA0E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F2641A3-F431-4063-B705-F3FBAD7EA0E2}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F2641A3-F431-4063-B705-F3FBAD7EA0E2}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{3F2641A3-F431-4063-B705-F3FBAD7EA0E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F2641A3-F431-4063-B705-F3FBAD7EA0E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F2641A3-F431-4063-B705-F3FBAD7EA0E2}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{3F2641A3-F431-4063-B705-F3FBAD7EA0E2}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{1E7A9792-55B5-4272-ACDE-4175388128C6}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{1E7A9792-55B5-4272-ACDE-4175388128C6}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{1E7A9792-55B5-4272-ACDE-4175388128C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E7A9792-55B5-4272-ACDE-4175388128C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E7A9792-55B5-4272-ACDE-4175388128C6}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E7A9792-55B5-4272-ACDE-4175388128C6}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{1E7A9792-55B5-4272-ACDE-4175388128C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E7A9792-55B5-4272-ACDE-4175388128C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E7A9792-55B5-4272-ACDE-4175388128C6}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{1E7A9792-55B5-4272-ACDE-4175388128C6}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
